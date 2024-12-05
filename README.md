@@ -48,14 +48,14 @@ python run_proxy.py
 ![03 12 2024_13 29 23_REC](https://github.com/user-attachments/assets/22979fa9-3825-4ffa-839d-2d6d15d395da)
 
 # Format proxy.txt
-http://user1:pass1@192.168.1.1:8080
-http://user2:pass2@192.168.1.2:8080
-http://192.168.1.3:8080
+- http://user1:pass1@192.168.1.1:8080
+- http://user2:pass2@192.168.1.2:8080
+- http://192.168.1.3:8080
 
 # Format accounts.txt
-email1@example.com:password1
-email2@example.com:password2
-email3@example.com:password3
+- email1@example.com:password1
+- email2@example.com:password2
+- email3@example.com:password3
 
 # RESULT TOKENS di token_list.txt
 
