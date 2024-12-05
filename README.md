@@ -5,10 +5,13 @@
 
 # CEK AKUN VALID IP
 ![03 12 2024_13 10 13_REC](https://github.com/user-attachments/assets/c8e75be8-a0e0-49db-b83a-d98ee230e567)
-
+```
+cd cek_valid_ip
+```
 ```
 python cek.py
 ```
+- Edit Cookies.txt jika error
 
 # Register Nodepay
 - https://app.nodepay.ai/register?ref=55vzBVxmyYouwN2
