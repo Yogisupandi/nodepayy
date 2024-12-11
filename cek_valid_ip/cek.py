@@ -52,6 +52,8 @@ with open('cookies.txt', 'r') as cookie_file:
 # Perbarui header Cookie dengan nilai dari cookies.txt
 headers["Cookie"] = cookie_value
 
+failed_tokens = []
+
 try:
     for index, token in enumerate(tokens):
         token_display = token[:4] + '*' * 10 + token[-4:]
@@ -62,7 +64,11 @@ try:
         
         headers["Authorization"] = f"Bearer {token}"
         
-        response = curl_requests.get(url, headers=headers, params=params, impersonate="chrome110")
+        try:
+            response = curl_requests.get(url, headers=headers, params=params, impersonate="chrome110")
+        except Exception as e:
+            print(f"{Fore.RED}Error during request: {e}")
+            continue
         
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
@@ -83,10 +89,12 @@ try:
                     line_count += 1
             else:
                 print(f"{current_time} - {Fore.RED}Request failed: {data.get('msg')}")
+                if data.get('msg') == "Unauthorized":
+                    failed_tokens.append(token)
                 line_count += 1
         elif response.status_code == 403:
             print(f"{current_time} - {Fore.RED}Access denied, check your token and permissions.")
-            # Optionally, handle token refresh or notify the user
+            failed_tokens.append(token)
         else:
             print(f"{current_time} - {Fore.RED}Failed to fetch data, Status Code: {response.status_code}")
             line_count += 1
@@ -94,3 +102,28 @@ try:
         time.sleep(5)
 except KeyboardInterrupt:
     print(f"{Fore.RED}Program terminated by user")
+
+# Cetak token yang gagal sebelum menyimpannya
+#print(f"{Fore.RED}Tokens yang gagal:")
+for token in failed_tokens:
+    print(token)
+print(f"{Fore.RED}Total tokens yang gagal: {len(failed_tokens)}\n")
+
+# Baca token yang sudah ada di tokens_failed.txt
+try:
+    with open('tokens_failed.txt', 'r') as file:
+        existing_failed_tokens = set(file.read().splitlines())
+except FileNotFoundError:
+    existing_failed_tokens = set()
+
+# Hapus token yang gagal dari tokens.txt dan simpan ke tokens_failed.txt
+with open('tokens.txt', 'w') as file:
+    for token in tokens:
+        if token not in failed_tokens:
+            file.write(f"{token}\n")
+
+# Tambahkan token yang gagal ke tokens_failed.txt jika belum ada
+with open('tokens_failed.txt', 'a') as file:
+    for token in failed_tokens:
+        if token not in existing_failed_tokens:
+            file.write(f"{token}\n")
